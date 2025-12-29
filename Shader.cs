@@ -17,13 +17,15 @@ public sealed class Shader : ShaderBase
     return new((byte)C.X,(byte)C.Y,(byte)C.Z);
   }
 
+  float     _iy  ;
   Vector2   _res ;
   Vector2   _x   ;
   Vector2   _y   ;
 
-  protected override void Setup(int weight, int height, double time)
+  protected override void Setup(int width, int height, double time)
   {
-    _res =new(weight, height);
+    _res =new(width, height);
+    _iy = 1/_res.Y;
     var (c,s) = SinCos(time);
     _x = new((float)+c,(float)+s);
     _y = new((float)-s,(float)+c);
@@ -33,7 +35,7 @@ public sealed class Shader : ShaderBase
   {
     Vector2 
       c = new (x,y)
-    , p = (c+c-_res)/_res.Y
+    , p = (c+c-_res)*_iy
     , t
     ;
 
@@ -51,6 +53,8 @@ public sealed class Shader : ShaderBase
     int 
       i
     ;
+
+    // No comments needed...
     for(i=0; i<49&&z<4&&d>1e-3; ++i) 
     {
       P=z*R;
