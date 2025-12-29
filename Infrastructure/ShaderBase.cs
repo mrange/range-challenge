@@ -4,10 +4,13 @@ namespace TermShader.Infrastructure;
 
 public abstract class ShaderBase
 {
-    public void Render(RenderContext context, TimeSpan elapsed)
+    public void Render(RenderContext context, double time)
     {
         int width = context.Viewport.Width;
         int height = context.Viewport.Height;
+
+        Setup(width, height+height, time);
+
         for (var x = 0; x < width; x++)
         {
             for (var y = 0; y < height; y++)
@@ -16,12 +19,13 @@ public abstract class ShaderBase
                 if (c is not null)
                 {
                   c.SetSymbol('▀');
-                  c.SetForeground(Run(x, y+y+0, width, height+height, elapsed));
-                  c.SetBackground(Run(x, y+y+1, width, height+height, elapsed));
+                  c.SetForeground(Run(x, y+y+0));
+                  c.SetBackground(Run(x, y+y+1));
                 }
             }
         }
     }
 
-    protected abstract Color Run(int x, int y, int weight, int height, TimeSpan elapsed);
+    protected abstract void Setup(int weight, int height, double time);
+    protected abstract Color Run(int x, int y);
 }
