@@ -42,12 +42,11 @@ while (isRunning)
         ctx.Render(text2, new Rectangle(0, ctx.Viewport.Bottom - 1, text2.GetWidth(), 1));
         ctx.Render(text, new Rectangle(ctx.Viewport.Right - text.GetWidth(), ctx.Viewport.Bottom - 1, text.GetWidth(), 1));
     });
-
-    // Check for exit
+    
     if (Console.KeyAvailable)
     {
-        // Escape is the canonical way to exit PC demos
-        if (Console.ReadKey(true).Key == ConsoleKey.Escape)
+        var key = Console.ReadKey(true).Key; 
+        if (key is ConsoleKey.Escape or ConsoleKey.Q)
         {
             isRunning = false;
         }
