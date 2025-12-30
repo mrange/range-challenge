@@ -57,7 +57,7 @@ public sealed class BoxShader : ShaderBase
     {
       P=z*R;
       P.Z-=3;
-      P=Dot(P,r)*r+Cross(P,_rot);
+      P=Dot(P,r)*r+Cross(P,r);
       P*=P;
       d=(float)Sqrt(Sqrt(Dot(P,P)))-1;
       z+=d;
