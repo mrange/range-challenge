@@ -50,8 +50,6 @@ while (isRunning)
         if (Console.ReadKey(true).Key == ConsoleKey.Escape)
         {
             isRunning = false;
-            // Turn on cursor again
-            //Console.Write("\x1b[?25h");
             break;
         }
     }
