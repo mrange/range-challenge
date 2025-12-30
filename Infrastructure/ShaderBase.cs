@@ -1,9 +1,29 @@
 ﻿using Spectre.Tui;
+using System.Numerics;
+
+using static System.Math;
+using static System.Numerics.Vector3;
 
 namespace TermShader.Infrastructure;
 
 public abstract class ShaderBase
 {
+    readonly static Vector3 _255  = new(255);
+
+    public static float Smoothstep(float edge0, float edge1, float x)
+    {
+      float
+        t=(float)Clamp((x-edge0)/(edge1-edge0),0,1)
+       ;
+      return t*t*(3-2*t);
+    }
+
+    public static Color ToColor(Vector3 c)
+    {
+      var C=Clamp(c,Zero,One)*_255;
+      return new((byte)C.X,(byte)C.Y,(byte)C.Z);
+    }
+
     public void Render(RenderContext context, double time)
     {
         int width = context.Viewport.Width;
@@ -13,7 +33,7 @@ public abstract class ShaderBase
 
         // Not sure if Spectre handles parallel assignments?
         //  At least we won't modify the same cell from multiple threads
-        Parallel.For(0, width, x => 
+        Parallel.For(0, width, x =>
         {
             for (var y = 0; y < height; y++)
             {
