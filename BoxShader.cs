@@ -33,8 +33,7 @@ public sealed class BoxShader : ShaderBase
     ;
 
     Vector3
-      C=Zero
-    , P
+      P
     , R=Normalize(new(p.X,p.Y,2))
     , r=_rot
     ;
@@ -59,9 +58,10 @@ public sealed class BoxShader : ShaderBase
       z+=d;
     }
 
-    if (z<4)
-      C=_fad*(One+Sin(_Base-new Vector3(i/33F+2*(p.X+p.Y))));
-
-    return ToColor(C);
+    return ToColor(
+      z<4
+      ?_fad*(One+Sin(_Base-new Vector3(i/33F+2*(p.X+p.Y))))
+      :Zero
+      );
   }
 }
