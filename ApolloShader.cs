@@ -10,6 +10,7 @@ public sealed class ApolloShader : ShaderBase
   readonly static Vector3 _Base = new(2,1,0);
 
   float   _inv;
+  float   _fad;
   float   _sin;
   Vector2 _res;
   Vector3 _rot;
@@ -23,6 +24,11 @@ public sealed class ApolloShader : ShaderBase
     _inv=1/_res.Y;
     _rot=Normalize(Sin(new Vector3(.2F*t+123)+new Vector3(0,1,2)));
     _sin=(float)Sin(.123*time);
+#if DEBUG_WEIRD_FPS
+    _fad=(float)(.25+.25*Cos(time));
+#else
+    _fad=.5F;
+#endif
   }
 
   protected override Color Run(int x, int y)
@@ -57,7 +63,7 @@ public sealed class ApolloShader : ShaderBase
     return ToColor(
         k<5E-3F
       ? One
-      : .5F/(1+k*k*5)*(One+Sin(_Base+new Vector3((float)(2+Log2(k)))))
+      : _fad/(1+k*k*5)*(One+Sin(_Base+new Vector3((float)(2+Log2(k)))))
       );
   }
 }
