@@ -32,10 +32,8 @@ while (isRunning)
     renderer.Draw((ctx, elapsed) =>
     {
         shader.Render(ctx, sw.Elapsed.TotalSeconds);
-
-        var fps = (int)(1 / elapsed.TotalSeconds);
-        ctx.Render(Text.FromMarkup($"FPS: [blue]{fps}[/]"));
         
+        ctx.Render(Text.FromMarkup($"FPS: [blue]{(int)(1 / elapsed.TotalSeconds)}[/]"));
         ctx.Render(text2, new Rectangle(0, ctx.Viewport.Bottom - 1, text2.GetWidth(), 1));
         ctx.Render(text, new Rectangle(ctx.Viewport.Right - text.GetWidth(), ctx.Viewport.Bottom - 1, text.GetWidth(), 1));
     });
