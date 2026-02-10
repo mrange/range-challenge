@@ -27,8 +27,7 @@ public sealed class GrottoShader : ShaderBase
   float G(Vector4 p, float s) 
   {
     var (S,C)=SinCos(s*p);
-    p.X=C.Z; p.Y=C.X;p.Z=C.W; p.W=C.Y;
-    return Abs(Dot(S,p)-1)/s;
+    return Abs(Dot(S,Shuffle(C,2,0,3,1))-1)/s;
   }
 
   protected override Color Run(int x, int y)
