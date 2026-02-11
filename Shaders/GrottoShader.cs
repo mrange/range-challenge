@@ -36,8 +36,10 @@ public sealed class GrottoShader : ShaderBase
       o=Zero
     , p=_O
     , _5=new(5)
-    , C=new(1.4F,.7F,0,2.1F)
+    , U=new(2,1,0,3)
+    , C=.7F*U
     , R=Vector3.Normalize(new(new Vector2(x,_R.Y-y)-_R2,_R.Y)).AsVector4()
+    , X
     ;
 
     float
@@ -49,7 +51,10 @@ public sealed class GrottoShader : ShaderBase
     for(int i=0;i<50;++i)
     {
       s=p.Y+.1F;
-      p.Y=Abs(s)-.31F;
+      p.Y=Abs(s)-.11F;
+      X=Vector3.Cos(new Vector3(p.Z+p.Z)+new Vector3(0,11,33)).AsVector4();
+      p=FusedMultiplyAdd(Shuffle(X,2,1,3,3)+Shuffle(U,2,2,2,2),Shuffle(p,1,0,2,3),(Shuffle(X,0,0,3,3)+Shuffle(U,2,2,1,1))*p);
+      p.Y-=.2F;
       d=.3F*Abs(G(p,8)-G(p,24));
       p=One+Cos(FusedMultiplyAdd(_5,new(p.Z),C));
       z+=d+5E-4F;
@@ -58,7 +63,7 @@ public sealed class GrottoShader : ShaderBase
       p=FusedMultiplyAdd(new(z),R,_O);
     }
 
-    o=FusedMultiplyAdd(new((1E3F+1E3F*_F)/(1E-4F+p.AsVector2().Length())),new Vector4(2,1,0,3),o);
+    o=FusedMultiplyAdd(new((1E3F+1E3F*_F)/(1E-4F+p.AsVector2().Length())),U,o);
     o*=2E-5F;
 
     return ToColor(TanhApprox(o.AsVector3()));
