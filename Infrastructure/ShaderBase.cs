@@ -44,9 +44,9 @@ public abstract class ShaderBase
 
         // Not sure if Spectre handles parallel assignments?
         //  At least we won't modify the same cell from multiple threads
-        Parallel.For(0, width, x =>
+        Parallel.For(0, height, y =>
         {
-            for (var y = 0; y < height; y++)
+            for (var x = 0; x < width; x++)
             {
                 var c = context.GetCell(x,y);
                 if (c is not null)
