@@ -1,64 +1,72 @@
 ﻿using System.Diagnostics;
-using TermShader.Infrastructure;
 using System.Runtime.CompilerServices;
+using TermShader;
+using TermShader.Infrastructure;
 
-var shader = new SelectionPrompt<ShaderBase>()
-    .Title(
-    """
-    A [blue]Spectre.Tui[/] demo by [yellow]Mårten Rånge[/]
-    What app do you want to run?
-    """)
-    .UseConverter(c => c.Name)
-    .AddChoices(
-        new BoxShader(),
-        new ApolloShader(),
-        new LandscapeShader(),
-        new GrottoShader())
-    .Show(AnsiConsole.Console);
-
-var isRunning = true;
-Console.CancelKeyPress += (e, s) =>
+public static class Program
 {
-    s.Cancel = true;
-    isRunning = false;
-};
-
-using var terminal = Terminal.Create();
-var renderer = new Renderer(terminal);
-renderer.SetTargetFps(60);
-var sw = Stopwatch.StartNew();
-
-while (isRunning)
-{
-    renderer.Draw((ctx, elapsed) =>
+    private static void Main(string[] args)
     {
-        shader.Render(ctx, sw.Elapsed.TotalSeconds);
-
-        // Render FPS
-        var fps = (int)(1 / elapsed.TotalSeconds);
-        ctx.Render(Text.FromString($"{fps}", new Appearance
+        var cst = new CancellationTokenSource();
+        Console.CancelKeyPress += (e, s) =>
         {
-            Foreground = GetFpsColor(fps),
-        }));
-    });
+            s.Cancel = true;
+            cst.Cancel();
+        };
 
-    if (Console.KeyAvailable)
+        using var terminal = Terminal.Create();
+        var renderer = new Renderer(terminal);
+        renderer.SetTargetFps(60);
+        
+
+        // Ask the user to select a shader
+        var shader = ShaderSelector.Select(renderer, cst.Token);
+        if (shader == null)
+        {
+            return;
+        }
+
+        // Run the selected shader
+        Run(renderer, shader, cst.Token);
+    }
+
+    private static void Run(Renderer renderer, ShaderBase shader, CancellationToken cancellationToken)
     {
-        var key = Console.ReadKey(true).Key;
-        if (key is ConsoleKey.Escape or ConsoleKey.Q)
+        var sw = Stopwatch.StartNew();
+
+        while (!cancellationToken.IsCancellationRequested)
         {
-            isRunning = false;
+            renderer.Draw((ctx, elapsed) =>
+            {
+                shader.Render(ctx, sw.Elapsed.TotalSeconds);
+
+                // Render FPS
+                var fps = (int)(1 / elapsed.TotalSeconds);
+                ctx.Render(Text.FromString($"{fps}", new Style
+                {
+                    Foreground = GetFpsColor(fps),
+                }));
+            });
+
+            if (Console.KeyAvailable)
+            {
+                var key = Console.ReadKey(true).Key;
+                if (key is ConsoleKey.Escape or ConsoleKey.Q)
+                {
+                    return;
+                }
+            }
         }
     }
-}
 
-[MethodImpl(MethodImplOptions.AggressiveInlining)]
-static Color GetFpsColor(int fps)
-{
-    return fps switch
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static Color GetFpsColor(int fps)
     {
-        >= 59 => Color.Green,
-        >= 24 => Color.Yellow,
-        _ => Color.Red,
-    };
+        return fps switch
+        {
+            >= 59 => Color.Green,
+            >= 24 => Color.Yellow,
+            _ => Color.Red,
+        };
+    }
 }
