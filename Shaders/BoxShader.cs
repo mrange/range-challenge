@@ -2,7 +2,7 @@ using Spectre.Tui;
 using System.Numerics;
 using TermShader.Infrastructure;
 
-using static System.Math;
+using static System.MathF;
 using static System.Numerics.Vector3;
 
 public sealed class BoxShader : ShaderBase
@@ -18,9 +18,7 @@ public sealed class BoxShader : ShaderBase
 
   protected override void Setup(int width, int height, double time)
   {
-    float
-      t=(float)time
-    ;
+    var t=(float)time;
     _res=new(width, height);
     _inv=1/_res.Y;
     _rot=Normalize(Sin(new Vector3(t)+new Vector3(0,1,2)));
@@ -56,7 +54,7 @@ public sealed class BoxShader : ShaderBase
       P.Z-=3;
       P=Dot(P,r)*r+Cross(P,r);
       P*=P;
-      d=(float)Sqrt(Sqrt(Dot(P,P)))-1;
+      d=Sqrt(Sqrt(Dot(P,P)))-1;
       z+=d;
     }
 

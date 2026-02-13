@@ -2,7 +2,7 @@ using Spectre.Tui;
 using System.Numerics;
 using TermShader.Infrastructure;
 
-using static System.Math;
+using static System.MathF;
 using static System.Numerics.Vector3;
 
 public sealed class LandscapeShader : ShaderBase

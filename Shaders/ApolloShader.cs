@@ -2,7 +2,7 @@ using Spectre.Tui;
 using System.Numerics;
 using TermShader.Infrastructure;
 
-using static System.Math;
+using static System.MathF;
 using static System.Numerics.Vector3;
 
 public sealed class ApolloShader : ShaderBase
@@ -19,15 +19,13 @@ public sealed class ApolloShader : ShaderBase
 
   protected override void Setup(int width, int height, double time)
   {
-    float
-      t=(float)time
-    ;
+    var t=(float)time;
     _res=new(width, height);
     _inv=1/_res.Y;
     _rot=Normalize(Sin(new Vector3(.2F*t+123)+new Vector3(0,1,2)));
-    _sin=(float)Sin(.123*time);
+    _sin=Sin(.123F*t);
 #if DEBUG_WEIRD_FPS
-    _fad=(float)(.25+.25*Cos(time));
+    _fad=(.25+.25*Cos(time));
 #else
     _fad=.5F;
 #endif
@@ -65,7 +63,7 @@ public sealed class ApolloShader : ShaderBase
     return ToColor(
         k<5E-3F
       ? One
-      : _fad/(1+k*k*5)*(One+Sin(_Base+new Vector3((float)(2+Log2(k)))))
+      : _fad/(1+k*k*5)*(One+Sin(_Base+new Vector3(2+Log2(k))))
       );
   }
 }
