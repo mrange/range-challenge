@@ -23,7 +23,8 @@ internal sealed class ShaderSelector
             new ShaderListItem("Rotating box", () => new BoxShader()),
             new ShaderListItem("Fractals", () => new ApolloShader()),
             new ShaderListItem("Landscape", () => new LandscapeShader()),
-            new ShaderListItem("Glowing grotto", () => new GrottoShader()))
+            new ShaderListItem("Glowing grotto", () => new GrottoShader()),
+            new ShaderListItem("Nothing Special", () => new NothingSpecialShader()))
             .SelectedIndex(0)
             .WrapAround()
             .HighlightStyle(new Style(Color.Yellow))

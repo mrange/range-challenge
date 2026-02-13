@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using TermShader.Infrastructure;
 
-using static System.Math;
+using static System.MathF;
 using static System.Numerics.Vector4;
 
 public sealed class GrottoShader : ShaderBase
@@ -17,10 +17,11 @@ public sealed class GrottoShader : ShaderBase
 
   protected override void Setup(int width, int height, double time)
   {
+    var t=(float)time;
     _R=new(width, height);
     _R2=.5F*_R;
-    _F=(float)(Sin(time)*Sin(1.7*time)*Sin(2.3*time));
-    _O=new(0,0,(float)time/23,.2F);
+    _F=(Sin(t)*Sin(1.7F*t)*Sin(2.3F*t));
+    _O=new(0,0,t/23,.2F);
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,7 +64,7 @@ public sealed class GrottoShader : ShaderBase
       p=FusedMultiplyAdd(new(z),R,_O);
     }
 
-    o=FusedMultiplyAdd(new((1E3F+1E3F*_F)/(1E-4F+p.AsVector2().Length())),U,o);
+    o=FusedMultiplyAdd(new(FusedMultiplyAdd(1E3F,_F,1E3F)/(1E-4F+p.AsVector2().Length())),U,o);
     o*=2E-5F;
 
     return ToColor(TanhApprox(o.AsVector3()));

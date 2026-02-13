@@ -1,7 +1,7 @@
 ﻿using Spectre.Tui;
 using System.Numerics;
 
-using static System.Math;
+using static System.MathF;
 using static System.Numerics.Vector3;
 
 namespace TermShader.Infrastructure;
@@ -16,7 +16,7 @@ public abstract class ShaderBase
     public static float Smoothstep(float edge0, float edge1, float x)
     {
       float
-        t=(float)Clamp((x-edge0)/(edge1-edge0),0,1)
+        t=(float)Math.Clamp((x-edge0)/(edge1-edge0),0,1)
        ;
       return t*t*(3-2*t);
     }
