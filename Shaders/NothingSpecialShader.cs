@@ -45,7 +45,7 @@ public sealed class NothingSpecialShader : ShaderBase
       p=FusedMultiplyAdd(new(z),R,O);
       X=p;
       Y=Cos(new Vector3(.4F*p.Z)+new Vector3(0,11,33)).AsVector4();
-      p=FusedMultiplyAdd((Vector4.Shuffle(Y,2,1,3,3)+Vector4.Shuffle(U,2,2,2,2)).AsVector3(), Shuffle(p,1,0,2), (Vector4.Shuffle(Y,0,0,3,3)+Vector4.Shuffle(U,2,2,1,1)).AsVector3()*p);
+      p=FusedMultiplyAdd(Vector4.Shuffle(Y,2,1,3,3).AsVector3(), Shuffle(p,1,0,2), (Vector4.Shuffle(Y,0,0,3,3)+Vector4.Shuffle(U,2,2,1,1)).AsVector3()*p);
       p-=new Vector3(.5F);
       p-=Round(p);
       p=(p*p)*(p*p);

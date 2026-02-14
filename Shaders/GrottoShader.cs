@@ -54,7 +54,7 @@ public sealed class GrottoShader : ShaderBase
       s=p.Y+.1F;
       p.Y=Abs(s)-.11F;
       X=Vector3.Cos(new Vector3(p.Z+p.Z)+new Vector3(0,11,33)).AsVector4();
-      p=FusedMultiplyAdd(Shuffle(X,2,1,3,3)+Shuffle(U,2,2,2,2),Shuffle(p,1,0,2,3),(Shuffle(X,0,0,3,3)+Shuffle(U,2,2,1,1))*p);
+      p=FusedMultiplyAdd(Shuffle(X,2,1,3,3),Shuffle(p,1,0,2,3),(Shuffle(X,0,0,3,3)+Shuffle(U,2,2,1,1))*p);
       p.Y-=.2F;
       d=.3F*Abs(G(p,8)-G(p,24));
       p=One+Cos(FusedMultiplyAdd(_5,new(p.Z),C));
