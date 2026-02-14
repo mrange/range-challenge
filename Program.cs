@@ -40,7 +40,7 @@ public static class Program
                 shader.Render(ctx, sw.Elapsed.TotalSeconds);
 
                 // Render FPS
-                var fps = (int)(1 / elapsed.TotalSeconds);
+                var fps = (int)Math.Ceiling(1 / elapsed.TotalSeconds);
                 ctx.Render(Text.FromString($"{fps}", new Style
                 {
                     Foreground = GetFpsColor(fps),

@@ -36,12 +36,14 @@ internal sealed class ShaderSelector
             .WrapAround()
             .HighlightStyle(new Style(Color.Yellow))
             .HighlightSymbol("→ ");
-
+        
         var isRunning = true;
         while (isRunning && !cancellationToken.IsCancellationRequested)
         {
             renderer.Draw((ctx, elapsed) =>
             {
+                ctx.Render(new ClearWidget());
+                
                 var innerArea = ctx.Viewport.Inflate(-1, -1);
                 ctx.Render(new BoxWidget());
 
