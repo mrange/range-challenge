@@ -24,11 +24,7 @@ public sealed class ApolloShader : ShaderBase
     _inv=1/_res.Y;
     _rot=Normalize(Sin(new Vector3(.2F*t+123)+new Vector3(0,1,2)));
     _sin=Sin(.123F*t);
-#if DEBUG_WEIRD_FPS
-    _fad=(.25+.25*Cos(time));
-#else
     _fad=.5F;
-#endif
   }
 
   protected override Color Run(int x, int y)

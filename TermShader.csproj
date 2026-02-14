@@ -10,7 +10,6 @@
     <IsAotCompatible>true</IsAotCompatible>
     <StripSymbols>true</StripSymbols>
     <IsTrimmable>true</IsTrimmable>
-<!--    <DefineConstants>$(DefineConstants);DEBUG_WEIRD_FPS</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>
