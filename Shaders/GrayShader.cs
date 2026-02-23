@@ -1,5 +1,6 @@
 using Spectre.Tui;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using TermShader.Infrastructure;
 
@@ -12,18 +13,36 @@ public sealed class GrayShader : ShaderBase
 
   static readonly Vector2 _path=MathF.Tau*new Vector2(1/11F,1/13F);
 
-  float _Z;
+  // TODO: Remove these 2
   float _G;
-  Vector2 _R;
   Vector3 _LP;
+
+  Vector2 _R;
+  Vector3 _S;
+  Vector3 _X;
+  Vector3 _Y;
+  Vector3 _Z;
 
   protected override void Setup(int width, int height, double time)
   {
-    _G=default;
-    _LP=default;
-    _Z=default;
+    var t=(float)(time%143);
+    _R=new(width,height);
+    Vector3
+      o0
+    , o1
+    , o2
+    ;
+    OFF(t+3,out o0, out o1, out o2);
+    _LP=o0;
+    OFF(t,out o0, out o1, out o2);
+    _S=o0;
+    _Z=Normalize(o1);
+    _X=Normalize(Cross(new Vector3(0,1,0)-o2,_Z));
+    _Y=Cross(_X,_Z);
+
   }
 
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   static float L(Vector3 p)
   {
     p*=p;
@@ -31,15 +50,7 @@ public sealed class GrayShader : ShaderBase
     return Sqrt(Sqrt(Sqrt(Dot(p,p))));
   }
 
-  static void OFF(float z, out Vector3 o0)
-  {
-    Vector2 
-      p=_path
-    , s=.5F*Vector2.Sin(p*z)
-    ;
-    o0=new(s,z);
-  }
-
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   static void OFF(float z, out Vector3 o0, out Vector3 o1, out Vector3 o2)
   {
     Vector2 
@@ -74,7 +85,7 @@ public sealed class GrayShader : ShaderBase
     o1=Normalize(o1);
     p-=o0.AsVector2().AsVector3();
     p-=Dot(p.AsVector2().AsVector3(), o1)*new Vector3(.5F,.5F,-.5F)*o1;
-    R=Cos(new Vector3(p.Z+p.Z)+new Vector3(0,11,33)).AsVector4();
+    R=Cos(new Vector3(o2.X)+new Vector3(0,11,33)).AsVector4();
     P=p.AsVector4();
     P=Vector4.FusedMultiplyAdd(Vector4.Shuffle(R,2,1,3,3),Vector4.Shuffle(P,1,0,2,3),Vector4.FusedMultiplyAdd(Vector4.Shuffle(R,0,0,3,3),P,Vector4.BitwiseAnd(P,M)));
     p=P.AsVector3();
@@ -90,7 +101,9 @@ public sealed class GrayShader : ShaderBase
 
   Vector3 N(Vector3 p)
   {
-    Vector3 E=new(1E-4F,0,0);
+    Vector3 
+      E=new(1E-4F,0,0)
+    ;
     return Normalize(new(
       D(p+E)-D(p-E)
     , D(p+Shuffle(E,1,0,2))-D(p-Shuffle(E,1,0,2))
@@ -123,18 +136,30 @@ public sealed class GrayShader : ShaderBase
     ;
 
     Vector2
-      C=new(x,y)
+      C=new(x,_R.Y-y)
     , P=(2F*C-_R)/_R.Y
     ;
 
     Vector3
-      o0
-    , o1
-    , o2
+      S=_S
+    , I=Normalize(-P.X*_X+P.Y*_Y+2*_Z)
+    , p
+    , D
+    , n
+    , o=Zero
     ;
 
-    OFF(_Z,o0,o1,o2);
-
-    return ToColor(Vector3.Zero);
+    _G=1E3F;
+    z=M(S,I);
+    g=_G;
+    p=FusedMultiplyAdd(new(z),I,S);
+    D=Normalize(_LP-p);
+    n=N(p);
+    if(z<4&&n.Z>-.9F)
+      o+=new Vector3(Pow(Max(0,Dot(Reflect(I,n),D)),40));
+//    o+=new Vector3(1E-2F/Max(g,1E-3F));
+    o=SquareRoot(o);
+    o-=new Vector3(.07F);
+    return ToColor(o);
   }
 }
