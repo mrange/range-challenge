@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spectre.Tui" Version="0.0.0-preview.0.46" />
+    <PackageReference Include="Spectre.Tui" Version="0.14.0" />
   </ItemGroup>
 
 </Project>

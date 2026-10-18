@@ -4,9 +4,9 @@ namespace TermShader;
 
 internal sealed class ShaderSelector
 {
-    private sealed class ShaderListItem(string name, Func<ShaderBase> func) : ListWidgetItem
+    private sealed class ShaderListItem(string name, Func<ShaderBase> func) : IListWidgetItem
     {
-        protected override Text CreateText(bool isSelected)
+        public Text CreateText(bool isSelected)
         {
             return Text.FromString(name);
         }
