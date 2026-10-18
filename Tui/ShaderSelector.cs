@@ -27,13 +27,15 @@ internal sealed class ShaderSelector
     public static ShaderBase? Select(Renderer renderer, CancellationToken cancellationToken)
     {
         var list = new ListWidget<ShaderListItem>(
-            NewShaderListItem<BoxShader>(),
-            NewShaderListItem<ApolloShader>(),
-            NewShaderListItem<LandscapeShader>(),
-            NewShaderListItem<GrottoShader>(),
-            NewShaderListItem<NothingSpecialShader>(),
-            NewShaderListItem<StarFieldShader>(),
-            NewShaderListItem<GlowingDescentShader>())
+              NewShaderListItem<ApolloShader>()
+            , NewShaderListItem<BoxShader>()
+            , NewShaderListItem<CavernShader>()
+            , NewShaderListItem<GlowingDescentShader>()
+            , NewShaderListItem<GrottoShader>()
+            , NewShaderListItem<LandscapeShader>()
+            , NewShaderListItem<NothingSpecialShader>()
+            , NewShaderListItem<StarFieldShader>()
+            )
             .SelectedIndex(0)
             .WrapAround()
             .HighlightStyle(new Style(Color.Yellow))
