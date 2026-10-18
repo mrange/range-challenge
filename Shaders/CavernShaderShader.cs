@@ -51,16 +51,16 @@ public sealed class CavernShader : ShaderBase
       p.Y=Abs(s)-.1F;
       P=p;
       Z=new(P.Z);
-      p+=Sin(FusedMultiplyAdd(new Vector3( 6F), Shuffle(p,1,2,0), Z))*(1F/ 6F);
-      p+=Sin(FusedMultiplyAdd(new Vector3(12F), Shuffle(p,1,2,0), Z))*(1F/12F);
-      p+=Sin(FusedMultiplyAdd(new Vector3(24F), Shuffle(p,1,2,0), Z))*(1F/24F);
-      p+=Sin(FusedMultiplyAdd(new Vector3(48F), Shuffle(p,1,2,0), Z))*(1F/48F);
+      p=FusedMultiplyAdd(Sin(FusedMultiplyAdd(new( 6F), Shuffle(p,1,2,0), Z)), new(1F/ 6F), p);
+      p=FusedMultiplyAdd(Sin(FusedMultiplyAdd(new(12F), Shuffle(p,1,2,0), Z)), new(1F/12F), p);
+      p=FusedMultiplyAdd(Sin(FusedMultiplyAdd(new(24F), Shuffle(p,1,2,0), Z)), new(1F/24F), p);
+      p=FusedMultiplyAdd(Sin(FusedMultiplyAdd(new(48F), Shuffle(p,1,2,0), Z)), new(1F/48F), p);
       S=(P-p).Length();
       s=s<0?.1F*s:0;
       d=Abs(0.63F-(p-Round(p)).Length()+s)+2e-3F-s;
       c=Vector4.One+Vector4.Sin(F+new Vector4(FusedMultiplyAdd(5, P.X, FusedMultiplyAdd(9, S, 0.5F*p.Z))));
       o+=Vector4.FusedMultiplyAdd(new(c.W*ReciprocalEstimate(d)*S*S),c,-Sign(s)*B);
-      z+=d*.2F;
+      z=FusedMultiplyAdd(0.2F,d,z);
     }
     s=z*z;
     s*=s;
