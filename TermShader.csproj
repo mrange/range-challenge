@@ -11,9 +11,11 @@
     <StripSymbols>true</StripSymbols>
     <IsTrimmable>true</IsTrimmable>
     <TieredCompilation>false</TieredCompilation>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JAJ.Packages.MiniAudioEx" Version="3.3.7" />
     <PackageReference Include="Spectre.Tui" Version="0.14.0" />
   </ItemGroup>
 

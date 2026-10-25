@@ -1,3 +1,6 @@
+using MiniAudioEx.Core.StandardAPI;
+using MiniAudioEx.Native;
+using MiniAudioEx.Utilities;
 using Spectre.Tui;
 using System.Numerics;
 using TermShader.Infrastructure;
@@ -14,6 +17,70 @@ public sealed class ApolloShader : ShaderBase
   float   _sin;
   Vector2 _res;
   Vector3 _rot;
+
+  readonly AudioApp _app;
+  readonly float[]  _data;
+  readonly int      _channels;
+  AudioSource?      _source;
+  volatile int      _pos;
+
+  public ApolloShader()
+  {
+    var decoder = new AudioDecoder();
+    decoder.DecodeFromFile(@"D:\code\github\range-challenge\michael-burns.mp3");
+    var channels    = decoder.Channels;
+    var data        = decoder.Data;
+    var sampleRate  = decoder.SampleRate;
+    _data           = data;
+    _channels       = channels;
+    _app            = new AudioApp((uint)sampleRate, (uint)channels);
+    _app.Loaded     += OnAppLoaded;
+
+    var thread = 
+      new Thread(_app.Run)
+      {
+        IsBackground = true
+      };
+    thread.Start();
+  }
+
+  void OnAppLoaded()
+  {
+    if (_source is null)
+    {
+      _source = new();
+      _source.Read += OnSourceRead;
+      _source.Play();
+    }
+  }
+
+  unsafe void OnSourceRead(NativeArray<float> framesOut, ulong frameCount, int channels)
+  {
+    if (_source is not null)
+    {
+      var flen = framesOut.Length;
+      var len = Math.Min(flen, _data.Length - _pos);
+      var rem = flen - len;
+      if (len > 0)
+      {
+        fixed (float * pdata = _data)
+        {
+          var na = new NativeArray<float>(pdata+_pos, len);
+          na.CopyTo(framesOut);
+        }
+      }
+      _pos += len;
+
+      if (rem > 0)
+      {
+        for (int i = len; i < flen; ++i)
+        {
+          framesOut[i]=0;
+        }
+        _pos = 0;
+      }
+    }
+  }
 
   public override string Name { get; } = "Fractals";
 
